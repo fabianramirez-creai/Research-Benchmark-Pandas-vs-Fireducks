@@ -16,7 +16,7 @@ This research was inspired by [Avi Chawla's post about Fireducks performance](ht
 
 ### Prerequisites
 - Linux environment or Windows Subsystem for Linux (WSL) - Fireducks currently only supports Linux environments
-- Python 3.x
+- Python version >3.8 and <=3.13
 - Virtual environment (recommended)
 
 ### Setup Steps
