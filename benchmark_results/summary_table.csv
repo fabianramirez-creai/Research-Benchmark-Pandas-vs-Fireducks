@@ -1,0 +1,13 @@
+,Pandas,DuckDB,Polars,Fireducks
+read_csv,20.68s,12.19s,12.88s,21.58s
+write_csv,18.45s,4.60s,11.34s,19.95s
+memory_usage,2770201.61s,2462.09s,2705.27s,2770201.61s
+column_selection,0.32s,0.42s,0.55s,0.30s
+filtering,0.58s,0.72s,0.79s,0.56s
+groupby,0.48s,0.64s,0.74s,0.45s
+sorting,2.83s,3.23s,2.94s,2.68s
+merge,19.90s,158.09s,20.88s,18.91s
+concatenation,1.25s,39.00s,2.11s,1.29s
+date_operations,1.43s,1.35s,2.11s,1.32s
+string_operations,8.86s,11.71s,14.58s,6.62s
+missing_value_operations,1.77s,0.93s,2.70s,1.75s

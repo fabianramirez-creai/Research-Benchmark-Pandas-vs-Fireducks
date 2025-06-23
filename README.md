@@ -1,94 +1,108 @@
-# Research-Benchmark-Pandas-vs-Fireducks
+# Research Benchmark: Pandas vs Fireducks
 
-This project conducts a comprehensive performance comparison between Pandas and Fireducks libraries for data manipulation in Python. The benchmarks focus on common operations like reading CSV files, data filtering, column selection, and memory usage using a large dataset of fake user information.
+This project benchmarks the performance of various data processing libraries (Pandas, DuckDB, Polars, and Fireducks) on common data operations.
 
-This research was inspired by [Avi Chawla's post about Fireducks performance](https://www.linkedin.com/posts/avi-chawla_pandas-is-getting-outdated-and-an-alternative-activity-7312407582340485120-fH_K/), which highlighted how Fireducks achieves significant performance improvements over Pandas through multi-core processing and lazy execution.
+## Setup
 
-## Key Findings
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd Research-Benchmark-Pandas-vs-Fireducks
+   ```
 
-- **CSV Reading Performance**: Fireducks demonstrated significantly faster CSV reading speeds, being 652.75x faster than Pandas
-- **Data Writing Performance**: Fireducks showed 4.98x faster performance in writing CSV files
-- **Memory Efficiency**: Fireducks used 1.2% less memory compared to Pandas
-- **Column Selection**: Fireducks was 645.37x faster in column selection operations
-- **Data Filtering**: Fireducks showed remarkable performance in filtering operations, being 1494.57x faster
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Installation
-
-### Prerequisites
-- Linux environment or Windows Subsystem for Linux (WSL) - Fireducks currently only supports Linux environments
-- Python version >3.8 and <=3.13
-- Virtual environment (recommended)
-
-### Setup Steps
-
-1. Clone the repository:
-```bash
-git clone https://github.com/fabianramirez-creai/Research-Benchmark-Pandas-vs-Fireducks.git
-cd Research-Benchmark-Pandas-vs-Fireducks
-```
-
-2. Create and activate a virtual environment:
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. **Prepare your data**:
+   - Place your CSV file (e.g., `fake_users.csv`) in the project root directory.
 
 ## Running the Benchmarks
 
-The benchmarks are implemented in Jupyter notebooks:
+Execute the benchmarks using the following command:
 
-1. First, generate the test data:
 ```bash
-jupyter notebook data_generator.ipynb
+python -m benchmarks.run_benchmarks
 ```
-Run all cells to create the fake user dataset.
 
-2. Run the benchmarks:
-```bash
-jupyter notebook benchmarks.ipynb
-```
-Execute all cells to see the performance comparisons.
+### What Happens
 
-## Benchmark Details
+- Each library's benchmarks are run **sequentially** in a separate process.
+- Each library is run **10 times** to ensure reliable results.
+- The results are averaged for each operation per library.
+- Final results are plotted and saved in the `benchmark_results` directory.
 
-The benchmarks test several key operations:
+## Results
 
-1. **CSV Reading**: Testing the speed of reading a large CSV file (~914MB)
-2. **CSV Writing**: Comparing write performance to disk
-3. **Memory Usage**: Analyzing memory consumption for both libraries
-4. **Column Selection**: Testing performance of selecting specific columns
-5. **Data Filtering**: Comparing filtering operations speed
+The benchmark results are saved in the `benchmark_results` directory:
 
-## Dataset
+- **`benchmark_results.png`**: Bar plot of benchmark results (log scale).
+- **`speedup_heatmap.png`**: Heatmap of speedup ratios compared to Pandas.
+- **`raw_results.csv`**: Raw benchmark results.
+- **`summary_table.csv`**: Summary table with formatted times.
 
-The benchmark uses a generated dataset (`fake_users.csv`) containing:
-- User information (name, email)
-- Account details (balance, status)
-- The dataset is approximately 914MB in size
+## Benchmark Results and Conclusions
 
-## Dependencies
+Based on the latest benchmark results (averaged over 10 runs), here are the key findings:
 
-Key libraries used:
-- pandas==2.2.3
-- fireducks==1.2.6
-- numpy==2.2.4
-- jupyter related packages for running notebooks
+![Benchmark Results](benchmark_results/benchmark_results.png)
 
-For a complete list of dependencies, see `requirements.txt`.
+### 🏆 Overall Performance Winners
 
-## Contributing
+**Fireducks** emerges as the top performer in most operations:
+- **Column Selection**: 1.07x faster than Pandas
+- **Filtering**: 1.04x faster than Pandas  
+- **Groupby**: 1.05x faster than Pandas
+- **Sorting**: 1.06x faster than Pandas
+- **Merge**: 1.05x faster than Pandas
+- **String Operations**: 1.34x faster than Pandas
 
-Feel free to contribute to this research by:
-1. Adding new benchmark scenarios
-2. Improving existing benchmarks
-3. Suggesting optimizations
-4. Reporting issues
+**DuckDB** excels in specific operations:
+- **CSV Reading**: 1.70x faster than Pandas
+- **CSV Writing**: 4.01x faster than Pandas
+- **Missing Value Operations**: 1.90x faster than Pandas
+
+### 📊 Detailed Analysis
+
+1. **Data I/O Operations**:
+   - **DuckDB** dominates CSV operations with 1.70x faster reading and 4.01x faster writing
+   - **Fireducks** shows competitive performance but slightly slower than DuckDB for I/O
+
+2. **Data Manipulation**:
+   - **Fireducks** consistently outperforms in column selection, filtering, and groupby operations
+   - **Polars** shows good performance but generally slower than Fireducks
+   - **DuckDB** struggles with merge operations (7.95x slower than Pandas)
+
+3. **Memory Usage**:
+   - **DuckDB** shows the most efficient memory usage (1,123x less memory than Pandas)
+   - **Polars** also demonstrates good memory efficiency
+   - **Fireducks** and **Pandas** show similar memory usage patterns
+
+4. **String and Date Operations**:
+   - **Fireducks** leads in string operations (1.34x faster than Pandas)
+   - **DuckDB** performs well in date operations (1.06x faster than Pandas)
+
+### 🎯 Recommendations
+
+- **For general data processing**: Use **Fireducks** for consistent performance across operations
+- **For heavy I/O workloads**: Consider **DuckDB** for superior CSV reading/writing
+- **For memory-constrained environments**: **DuckDB** offers the best memory efficiency
+- **For string-heavy operations**: **Fireducks** provides the best performance
+
+### ⚠️ Notable Limitations
+
+- **DuckDB** shows significant performance degradation in merge operations (158s vs 20s for Pandas)
+- **Polars** generally performs well but doesn't lead in any specific category
+- **Fireducks** shows slightly slower CSV I/O compared to DuckDB
+
+## Notes
+
+- Each library runs in a fresh process to ensure a clean memory state.
+- Memory usage is monitored and logged during execution.
+- The default number of repeats is 10, but you can adjust `num_repeats` in `main()` if needed.
 
 ## License
 
-This project is open source and available under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
